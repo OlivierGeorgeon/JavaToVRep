@@ -15,7 +15,6 @@
 // This file was automatically created for V-REP release V3.3.2 on August 29th 2016
 package main;
 import coppelia.IntW;
-import coppelia.IntWA;
 import coppelia.remoteApi;
 
 // Make sure to have the server side running in V-REP: 
@@ -35,7 +34,7 @@ public class Main
 	public static void main(String[] args)
     {
     	int action = 1;
-    	int result = 1;
+    	int result = 2;
         System.out.println("Program started");
         remoteApi vrep = new remoteApi();
         vrep.simxFinish(-1); // just in case, close all opened connections
@@ -47,70 +46,29 @@ public class Main
             Boolean condition = true;
             while (condition) {
             	
-            System.out.format("pre-result: %d\n",result); // Mouse position x is actualized when the cursor is over V-REP's window
-            if (result == 2)  {	
-            	if (action == 1) action = 2;
-            	else action = 1;
-            }
-        	vrep.simxSetIntegerSignal(clientID, "action", action, vrep.simx_opmode_oneshot);
-
-            /*
-            // Now try to retrieve data in a blocking fashion (i.e. a service call):
-            IntWA objectHandles = new IntWA(1);
-            int ret=vrep.simxGetObjects(clientID,vrep.sim_handle_all,objectHandles,vrep.simx_opmode_blocking);
-            if (ret==vrep.simx_return_ok)
-                System.out.format("Number of objects in the scene: %d\n",objectHandles.getArray().length);
-            else
-                System.out.format("Remote API function call returned with error code: %d\n",ret);
-                
-            try
-            {
-                Thread.sleep(2000);
-            }
-            catch(InterruptedException ex)
-            {
-                Thread.currentThread().interrupt();
-            }
-             */
+            	if (result == 2)  {	
+            		if (action == 1) action = 2;
+            		else action = 1;
+            	}
             
-            // Now retrieve streaming data (i.e. in a non-blocking fashion):
-            long startTime=System.currentTimeMillis();
-            IntW mouseX = new IntW(0);
-            IntW signalValue = new IntW(0);
-            int ret = -1;
-            vrep.simxGetIntegerParameter(clientID,vrep.sim_intparam_mouse_x,mouseX,vrep.simx_opmode_streaming); // Initialize streaming
-            while (System.currentTimeMillis()-startTime < 10000 && signalValue.getValue() == 0)
-            {
-                //ret=vrep.simxGetIntegerParameter(clientID,vrep.sim_intparam_mouse_x,mouseX,vrep.simx_opmode_buffer); // Try to retrieve the streamed data
-                //if (ret==vrep.simx_return_ok) // After initialization of streaming, it will take a few ms before the first value arrives, so check the return code
-                //    System.out.format("Mouse position x: %d\n",mouseX.getValue()); // Mouse position x is actualized when the cursor is over V-REP's window
-                // og 
-                ret = vrep.simxGetIntegerSignal(clientID, "result", signalValue, vrep.simx_opmode_blocking);
-                //ret = vrep.simxGetIntegerSignal(clientID, "result", signalValue, vrep.simx_opmode_buffer);
-                //if (ret==vrep.simx_return_ok) // After initialization of streaming, it will take a few ms before the first value arrives, so check the return code
-                    System.out.format("Result: %d\n",signalValue.getValue()); // Mouse position x is actualized when the cursor is over V-REP's window
-                    result = signalValue.getValue();    
-            }
-            /*
-            startTime=System.currentTimeMillis();
-            while (System.currentTimeMillis()-startTime < 10000 && signalValue.getValue() == 0)
-            {
-                //ret=vrep.simxGetIntegerParameter(clientID,vrep.sim_intparam_mouse_x,mouseX,vrep.simx_opmode_buffer); // Try to retrieve the streamed data
-                //if (ret==vrep.simx_return_ok) // After initialization of streaming, it will take a few ms before the first value arrives, so check the return code
-                //    System.out.format("Mouse position x: %d\n",mouseX.getValue()); // Mouse position x is actualized when the cursor is over V-REP's window
-                // og 
-                ret = vrep.simxGetIntegerSignal(clientID, "result", signalValue, vrep.simx_opmode_blocking);
-                //ret = vrep.simxGetIntegerSignal(clientID, "result", signalValue, vrep.simx_opmode_buffer);
-                //if (ret==vrep.simx_return_ok) // After initialization of streaming, it will take a few ms before the first value arrives, so check the return code
-                result = signalValue.getValue();    
-            	System.out.format("Result: %d\n",result); // Mouse position x is actualized when the cursor is over V-REP's window
-            }
-            */
-            ret = vrep.simxSetIntegerSignal(clientID, "result", 0, vrep.simx_opmode_blocking);
-            
+            	// Send the action signal to V-Rep. 
+            	// V-Rep will reset the action signal after reading it
+            	vrep.simxSetIntegerSignal(clientID, "action", action, vrep.simx_opmode_oneshot);
 
-            // Now send some data to V-REP in a non-blocking fashion:
-            //vrep.simxAddStatusbarMessage(clientID,"Hello V-REP!",vrep.simx_opmode_oneshot);
+            	// Now retrieve streaming data (i.e. in a non-blocking fashion):
+            	//long startTime=System.currentTimeMillis();
+            	IntW signalValue = new IntW(0);
+            	while (signalValue.getValue() == 0)
+            	{
+            		vrep.simxGetIntegerSignal(clientID, "result", signalValue, vrep.simx_opmode_blocking);
+            	}
+        		result = signalValue.getValue();    
+            	
+            	// Reset the result signal after reading it
+            	vrep.simxSetIntegerSignal(clientID, "result", 0, vrep.simx_opmode_blocking);
+            	
+            	System.out.format("Action: %d, Result: %d\n",action, result); 
+
             }
             
             // Before closing the connection to V-REP, make sure that the last command sent out had time to arrive. You can guarantee this with (for example):
