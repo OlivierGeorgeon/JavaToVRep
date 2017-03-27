@@ -16,6 +16,8 @@
 package main;
 import coppelia.IntW;
 import coppelia.remoteApi;
+import existence.Existence;
+import existence.Existence100;
 
 // Make sure to have the server side running in V-REP: 
 // in a child script of a V-REP scene, add following command
@@ -33,6 +35,17 @@ public class Main
     @SuppressWarnings("static-access")
 	public static void main(String[] args)
     {
+    	
+		Existence existence = new Existence100();
+		
+		/** Change this line to adjust the number of cycles of the loop: */
+		for(int i = 0 ; i < 100 ; i++){			
+			String stepTrace = existence.step();
+			System.out.println(i + ": " + stepTrace);
+		}
+
+    	
+    	/*
     	int action = 1;
     	int result = 2;
         System.out.println("Program started");
@@ -55,8 +68,7 @@ public class Main
             	// V-Rep will reset the action signal after reading it
             	vrep.simxSetIntegerSignal(clientID, "action", action, vrep.simx_opmode_oneshot);
 
-            	// Now retrieve streaming data (i.e. in a non-blocking fashion):
-            	//long startTime=System.currentTimeMillis();
+            	// Read the result signal 
             	IntW signalValue = new IntW(0);
             	while (signalValue.getValue() == 0)
             	{
@@ -67,7 +79,7 @@ public class Main
             	// Reset the result signal after reading it
             	vrep.simxSetIntegerSignal(clientID, "result", 0, vrep.simx_opmode_blocking);
             	
-            	System.out.format("Action: %d, Result: %d\n",action, result); 
+            	System.out.format("Action: %d, Result: %d\n", action, result); 
 
             }
             
@@ -81,6 +93,7 @@ public class Main
         else
             System.out.println("Failed connecting to remote API server");
         System.out.println("Program ended");
+    */
     }
 }
             
