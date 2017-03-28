@@ -7,6 +7,7 @@ import coppelia.IntW;
 import coppelia.remoteApi;
 import coupling.Experiment;
 import coupling.Result;
+import coupling.interaction.Interaction;
 import existence.Existence010.Mood;
 
 
@@ -14,7 +15,10 @@ public class Existence100 extends Existence010 {
 
     remoteApi vrep;
     int clientID;
-    InputStream in;
+    //InputStream in;
+    
+    Result lastResultForExperiment1; 
+    Result lastResultForExperiment2; 
 	
 	@Override
 	protected void initExistence() {
@@ -38,6 +42,11 @@ public class Existence100 extends Existence010 {
 		
 		Result result = returnResult010(experience);
 	
+		if (experience.equals(addOrGetExperience(LABEL_E1)))
+			lastResultForExperiment1 = result;
+		else
+			lastResultForExperiment2 = result;
+
 		this.addOrGetPrimitiveInteraction(experience, result);
 		
 		if (result == anticipatedResult){
@@ -77,6 +86,20 @@ public class Existence100 extends Existence010 {
 		return experience.getLabel() + result.getLabel() + " " + this.getMood();
 	}
 
+	/**
+	 * Predicts the expected result for a given experiment
+	 * @return The expected result.
+	 */
+	@Override
+	protected Result predict(Experiment experience){
+		Result anticipatedResult = null;
+		if (experience.equals(addOrGetExperience(LABEL_E1)))
+			anticipatedResult = lastResultForExperiment1;
+		else
+			anticipatedResult = lastResultForExperiment2;
+		
+		return anticipatedResult;
+	}
 	/**
 	 * The Environment010
 	 * E1 results in R1. E2 results in R2.
