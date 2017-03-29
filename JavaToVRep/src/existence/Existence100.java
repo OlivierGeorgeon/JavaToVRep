@@ -82,7 +82,6 @@ public class Existence100 extends Existence010 {
     		e1.printStackTrace();
     	}
     	
-		
 		return experience.getLabel() + result.getLabel() + " " + this.getMood();
 	}
 
