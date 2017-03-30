@@ -17,7 +17,6 @@ public class Existence310 extends Existence031 {
 
     remoteApi vrep;
     int clientID;
-    //InputStream in;
     
     Result lastResultForExperiment1; 
     Result lastResultForExperiment2; 
@@ -52,6 +51,23 @@ public class Existence310 extends Existence031 {
 		this.setEnactedInteraction(enactedInteraction);
 		
 		String babySoundFile = "sound/baby1.wav";
+		switch (getMood()) {
+		case SELF_SATISFIED:
+			babySoundFile = "sound/baby6.wav";
+			break;
+		case FRUSTRATED:
+			babySoundFile = "sound/baby8.wav";
+			break;
+		case PAINED:
+			babySoundFile = "sound/baby12.wav";
+			break;
+		case PLEASED:
+			babySoundFile = "sound/baby6.wav";
+			break;
+		case BORED:
+			babySoundFile = "sound/baby11.wav";
+			break;
+		}
     	try {
     		AudioPlayer.player.start(new FileInputStream(babySoundFile));
     	} catch (FileNotFoundException e1) {

@@ -15,7 +15,6 @@ public class Existence100 extends Existence010 {
 
     remoteApi vrep;
     int clientID;
-    //InputStream in;
     
     Result lastResultForExperiment1; 
     Result lastResultForExperiment2; 
