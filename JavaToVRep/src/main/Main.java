@@ -21,8 +21,9 @@ public class Main
     	
 		//Existence existence = new Existence100();
 		Existence existence = new Existence310();
+		//Existence existence = new Existence330();
 		
-		for(int i = 0 ; i < 100 ; i++){			
+		for(int i = 0 ; i < 300 ; i++){			
 			String stepTrace = existence.step();
 			System.out.println(i + ": " + stepTrace);
 		}
