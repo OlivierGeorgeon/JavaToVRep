@@ -9,11 +9,13 @@ import agent.Anticipation;
 import coppelia.IntW;
 import coppelia.remoteApi;
 import coupling.Experiment;
+import coupling.Experiment040;
 import coupling.Result;
 import coupling.interaction.Interaction031;
+import coupling.interaction.Interaction040;
 import existence.Existence010.Mood;
 
-public class Existence310 extends Existence031 {
+public class Existence400 extends Existence040 {
 
     remoteApi vrep;
     int clientID;
@@ -30,22 +32,7 @@ public class Existence310 extends Existence031 {
 	@Override
 	public String step() {
 		
-		List<Anticipation> anticipations = anticipate();
-		Experiment experience =  selectExperiment(anticipations);
-		
-		Result result = returnResult031(experience);
-	
-		Interaction031 enactedInteraction = getInteraction(experience.getLabel() + result.getLabel());
-		System.out.println("Enacted "+ enactedInteraction.toString());
-
-		if (enactedInteraction.getValence() >= 0)
-			this.setMood(Mood.PLEASED);
-		else
-			this.setMood(Mood.PAINED);
-		
-		this.learnCompositeInteraction(enactedInteraction);
-		
-		this.setEnactedInteraction(enactedInteraction);
+		String traceStep = super.step(); 
 		
 		String babySoundFile = "sound/baby1.wav";
 		switch (getMood()) {
@@ -70,13 +57,12 @@ public class Existence310 extends Existence031 {
     	} catch (FileNotFoundException e1) {
     		e1.printStackTrace();
     	}
-
 		
-		return "" + this.getMood();
+    	return traceStep;
 	}
 
 	@Override
-	public Result returnResult031(Experiment experiment){
+	public Result returnResult040(Experiment experiment){
 		int action = 1;
 		if (experiment.equals(addOrGetExperience(LABEL_E2)))
 			action = 2;
