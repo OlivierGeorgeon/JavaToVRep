@@ -116,32 +116,6 @@ public class Existence400 extends Existence040 {
 		}
 	}
 
-	
-	@Override
-	public Interaction040 enactPrimitiveIntearction(Interaction030 intendedPrimitiveInteraction){
-		Experiment experience = intendedPrimitiveInteraction.getExperience();
-		System.out.println("Intended primitive interaction: " + intendedPrimitiveInteraction.toString());
-		System.out.println("Performing primitive experiment: " + experience.getLabel());
-
-		Result result = returnResult040(experience);
-		
-		Interaction040 enactedInteraction = (Interaction040)this.addOrGetPrimitiveInteraction(experience, result);		
-		/*
-		String babySoundFile = "sound/baby12.wav"; // pained
-		if (enactedInteraction.getValence() > 0) {
-		//if (result.getLabel() == "r2") {
-			// pleased
-			babySoundFile = "sound/baby6.wav";
-		}
-    	try {
-    		AudioPlayer.player.start(new FileInputStream(babySoundFile));
-    	} catch (FileNotFoundException e1) {
-    		e1.printStackTrace();
-    	}
-		*/
-		return enactedInteraction;
-	}
-
 	@Override
 	public Result returnResult040(Experiment experiment){
 		int action = 0;
