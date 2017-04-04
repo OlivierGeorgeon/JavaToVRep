@@ -3,6 +3,7 @@ import existence.Existence;
 import existence.Existence100;
 import existence.Existence310;
 import existence.Existence400;
+import existence.Existence500;
 
 // Make sure to have the server side running in V-REP: 
 // in a child script of a V-REP scene, add following command
@@ -22,7 +23,7 @@ public class Main
     	
 		//Existence existence = new Existence100();
 		//Existence existence = new Existence310();
-		Existence existence = new Existence400();
+		Existence existence = new Existence500();
 		
 		for(int i = 0 ; i < 300 ; i++){			
 			String stepTrace = existence.step();
