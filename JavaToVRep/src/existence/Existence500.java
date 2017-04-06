@@ -6,6 +6,7 @@ import java.util.List;
 
 import sun.audio.AudioPlayer;
 import agent.Anticipation;
+import agent.Anticipation031;
 import coppelia.IntW;
 import coppelia.remoteApi;
 import coupling.Experiment;
@@ -14,6 +15,7 @@ import coupling.Experiment050;
 import coupling.Result;
 import coupling.interaction.Interaction;
 import coupling.interaction.Interaction030;
+import coupling.interaction.Interaction031;
 import coupling.interaction.Interaction040;
 import existence.Existence010.Mood;
 
@@ -83,6 +85,45 @@ public class Existence500 extends Existence050 {
 		this.setEnactedInteraction(enactedInteraction);
 		
 		return "" + this.getMood();
+	}
+
+	/**
+	 * Computes the list of anticipations
+	 * @return the list of anticipations
+	 */
+	@Override
+	public List<Anticipation> anticipate(){
+
+		List<Anticipation> anticipations = getDefaultAnticipations();
+		List<Interaction> activatedInteractions =  this.getActivatedInteractions();
+		
+		// Propose the post-experiences (the post-interactions's experiences) of the activated interactions 
+		if (this.getEnactedInteraction() != null){
+			for (Interaction activatedInteraction : activatedInteractions){
+				if (((Interaction031)activatedInteraction).getPostInteraction().getExperience() != null){
+					Anticipation031 anticipation = new Anticipation031(((Interaction031)activatedInteraction).getPostInteraction().getExperience(), ((Interaction031)activatedInteraction).getWeight() * ((Interaction031)activatedInteraction).getPostInteraction().getValence());
+					int index = anticipations.indexOf(anticipation);
+					if (index < 0)
+						anticipations.add(anticipation);
+					else
+						((Anticipation031)anticipations.get(index)).addProclivity(((Interaction031)activatedInteraction).getWeight() * ((Interaction031)activatedInteraction).getPostInteraction().getValence());
+				}
+			}
+		}
+		
+		// For each proposed experience, adjust its proclivity based on its possible resulting interactions 
+		for (Anticipation anticipation : anticipations){
+			for (Interaction resultingInteraction : ((Experiment050)((Anticipation031)anticipation).getExperience()).getEnactedInteractions()){
+				for (Interaction activatedInteraction : activatedInteractions){
+					if (resultingInteraction == ((Interaction031)activatedInteraction).getPostInteraction()){
+						int proclivity = ((Interaction031)activatedInteraction).getWeight() * ((Interaction031)resultingInteraction).getValence() / 2; 
+						((Anticipation031)anticipation).addProclivity(proclivity);
+					}
+				}
+			}
+		}
+
+		return anticipations;
 	}
 
 	@Override
