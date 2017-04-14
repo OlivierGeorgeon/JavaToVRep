@@ -6,6 +6,7 @@ import java.util.List;
 
 import sun.audio.AudioPlayer;
 import agent.Anticipation;
+import coppelia.CharWA;
 import coppelia.IntW;
 import coppelia.remoteApi;
 import coupling.Experiment;
@@ -118,40 +119,24 @@ public class Existence400 extends Existence040 {
 
 	@Override
 	public Result returnResult040(Experiment experiment){
-		int action = 0;
-		if (experiment.equals(addOrGetExperience(LABEL_E1)))
-			action = 1;
-		else if (experiment.equals(addOrGetExperience(LABEL_E2)))
-			action = 2;
-		else {
-			System.out.println("Unknown primitive experiment " + experiment.getLabel());
-			System.exit(1);
-		}
+		CharWA charAction = new CharWA(experiment.getLabel());
 		
     	// Send the action signal to V-Rep. 
     	// V-Rep will reset the action signal after reading it
-    	vrep.simxSetIntegerSignal(clientID, "action", action, vrep.simx_opmode_oneshot);
+    	vrep.simxSetStringSignal(clientID, "action", charAction, vrep.simx_opmode_oneshot);
 
     	// Read the result signal 
-    	IntW signalValue = new IntW(0);
-    	while (signalValue.getValue() == 0)
+    	CharWA charResult = new CharWA("r0");
+    	while (charResult.getString().equals("r0"))
     	{
-    		vrep.simxGetIntegerSignal(clientID, "result", signalValue, vrep.simx_opmode_blocking);
+    		vrep.simxGetStringSignal(clientID, "result", charResult, vrep.simx_opmode_blocking);
     	}
-		int result = signalValue.getValue();
 		
     	// Reset the result signal after reading it
-    	vrep.simxSetIntegerSignal(clientID, "result", 0, vrep.simx_opmode_blocking);
+    	vrep.simxSetStringSignal(clientID, "result", new CharWA("r0"), vrep.simx_opmode_blocking);
     	
-    	System.out.format("Action: %d, Result: %d\n", action, result); 
+    	System.out.format("Action: %s, Result: %s\n", charAction.getString(), charResult.getString()); 
 
-    	Result resultObject; 
-    	if (result == 1)
-			resultObject =  createOrGetResult(LABEL_R1);
-		else
-			resultObject =  createOrGetResult(LABEL_R2);
-
-    	return resultObject;
-	}	
-	
+    	return createOrGetResult(charResult.getString());
+	}		
 }

@@ -7,6 +7,7 @@ import java.util.List;
 import sun.audio.AudioPlayer;
 import agent.Anticipation;
 import agent.Anticipation031;
+import coppelia.CharWA;
 import coppelia.IntW;
 import coppelia.remoteApi;
 import coupling.Experiment;
@@ -166,42 +167,29 @@ public class Existence500 extends Existence050 {
 	 */
 	@Override
 	public Interaction040 enactPrimitiveIntearction(Interaction030 intendedPrimitiveInteraction){
-		int action = 0;
-		if (intendedPrimitiveInteraction.getLabel().contains(LABEL_E1))
-			action = 1;
-		else if (intendedPrimitiveInteraction.getLabel().contains(LABEL_E2))
-			action = 2;
-		else {
-			System.out.println("Unknown primitive interaction " + intendedPrimitiveInteraction.getLabel());
-			System.exit(1);
-		}
+		CharWA charAction = new CharWA(intendedPrimitiveInteraction.getLabel().substring(0, 2));
+
+		//System.out.println("Unknown primitive interaction " + intendedPrimitiveInteraction.getLabel());
+		//System.exit(1);
 		
     	// Send the action signal to V-Rep. 
     	// V-Rep will reset the action signal after reading it
-    	vrep.simxSetIntegerSignal(clientID, "action", action, vrep.simx_opmode_oneshot);
+    	vrep.simxSetStringSignal(clientID, "action", charAction, vrep.simx_opmode_oneshot);
 
     	// Read the result signal 
-    	IntW signalValue = new IntW(0);
-    	while (signalValue.getValue() == 0)
+    	CharWA charResult = new CharWA("r0");
+    	while (charResult.getString().equals("r0"))
     	{
-    		vrep.simxGetIntegerSignal(clientID, "result", signalValue, vrep.simx_opmode_blocking);
+    		vrep.simxGetStringSignal(clientID, "result", charResult, vrep.simx_opmode_blocking);
     	}
-		int result = signalValue.getValue();
 		
     	// Reset the result signal after reading it
-    	vrep.simxSetIntegerSignal(clientID, "result", 0, vrep.simx_opmode_blocking);
+    	vrep.simxSetStringSignal(clientID, "result", new CharWA("r0"), vrep.simx_opmode_blocking);
     	
-    	System.out.format("Action: %d, Result: %d\n", action, result); 
+    	System.out.format("Action: %s, Result: %s\n", charAction.getString(), charResult.getString()); 
 
 		Interaction040 enactedInteraction = null;
-    	if (action == 1 && result == 1)
-    		enactedInteraction = this.addOrGetPrimitiveInteraction(LABEL_E1 + LABEL_R1, -5);
-		else if (action == 1 && result == 2)
-    		enactedInteraction = this.addOrGetPrimitiveInteraction(LABEL_E1 + LABEL_R2, 1);
-		else if (action == 2 && result == 1)
-    		enactedInteraction = this.addOrGetPrimitiveInteraction(LABEL_E2 + LABEL_R1, -5);
-		else if (action == 2 && result == 2)
-    		enactedInteraction = this.addOrGetPrimitiveInteraction(LABEL_E2 + LABEL_R2, 1);
+		enactedInteraction = this.addOrGetPrimitiveInteraction(charAction.getString() + charResult.getString(), 0);
 
     	return enactedInteraction;
 	}	
