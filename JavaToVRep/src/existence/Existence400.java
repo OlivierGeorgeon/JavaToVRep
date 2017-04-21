@@ -15,6 +15,11 @@ import coupling.Result;
 import coupling.interaction.Interaction030;
 import coupling.interaction.Interaction040;
 
+//Make sure to have the server side running in V-REP: 
+//Open V-REP 
+//Open the scene LittleAI-Level0.ttt
+//Start the simulation
+
 public class Existence400 extends Existence040 {
 
     remoteApi vrep;
