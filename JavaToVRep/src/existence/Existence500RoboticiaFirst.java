@@ -15,12 +15,12 @@ import coupling.interaction.Interaction030;
 import coupling.interaction.Interaction040;
 import existence.Existence010.Mood;
 
-//Run Poppy-Torso in V-REP: 
-//Open V-REP
-//In the terminal, open a note book: jupyter notebook
-//In the browser, open the notebook JavaToVrep/vrep/PoppyTorso.ipynb and run it  
+//Run Roboticia-First in V-REP: 
+// Open V-REP
+// In the terminal, open a note book: jupyter notebook
+// In the browser, open the notebook JavaToVrep/vrep/RoboticiaFirst.ipynb and run it  
 
-public class Existence500PoppyTorso extends Existence500 {
+public class Existence500RoboticiaFirst extends Existence500 {
 
 	@Override
 	public String step() {
@@ -96,7 +96,7 @@ public class Existence500PoppyTorso extends Existence500 {
 	        
 	        int responseCode = connection.getResponseCode(); 
 	        //System.out.println("Response Code : " + responseCode);
-			Thread.sleep(600);
+			Thread.sleep(1500);
 	        
 	        //connection.disconnect(); 		
 	    } catch(Exception e) { 
@@ -127,19 +127,18 @@ public class Existence500PoppyTorso extends Existence500 {
 			System.out.println(response.toString());
 			*/
 			in.close();		
-			System.out.println(inputLine);
-			String loadString = inputLine.substring(14, 15);
+			String loadString = inputLine.substring(14, 19);
 			System.out.println(loadString);
-			float eResult = Float.parseFloat(loadString);
+			float presentLoad = Float.parseFloat(loadString);
 			
-			if (eResult > 0){ 	
+			if (presentLoad > 0){ 	
 				retultLabel = LABEL_R2;
 			}
 
 			if (retultLabel.equals(LABEL_R2)){
-				String babySoundFile = "sound/wood.wav";
-				if (eResult > 1){
-					babySoundFile = "sound/drum.wav";
+				String babySoundFile = "sound/drum.wav";
+				if (experimentLabel.equals(LABEL_E2)){
+					babySoundFile = "sound/wood.wav";
 				}
 				try {
 					AudioPlayer.player.start(new FileInputStream(babySoundFile));
