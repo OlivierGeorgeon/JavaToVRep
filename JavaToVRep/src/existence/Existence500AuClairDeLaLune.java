@@ -28,11 +28,11 @@ public class Existence500AuClairDeLaLune extends Existence500 {
 	@Override
 	protected void initExistence() {
 		//super.initExistence();
-		addOrGetPrimitiveInteraction(LABEL_E1 + LABEL_R1, -10);
+		addOrGetPrimitiveInteraction(LABEL_E1 + LABEL_R1, -15);
 		Interaction040 i12 = addOrGetPrimitiveInteraction(LABEL_E1 + LABEL_R2, 1);
-		addOrGetPrimitiveInteraction(LABEL_E2 + LABEL_R1, -10);
+		addOrGetPrimitiveInteraction(LABEL_E2 + LABEL_R1, -15);
 		Interaction040 i22 = addOrGetPrimitiveInteraction(LABEL_E2 + LABEL_R2, 1);
-		addOrGetPrimitiveInteraction(LABEL_E3 + LABEL_R1, -10);
+		addOrGetPrimitiveInteraction(LABEL_E3 + LABEL_R1, -15);
 		Interaction040 i32 = addOrGetPrimitiveInteraction(LABEL_E3 + LABEL_R2, 1);
 		addOrGetAbstractExperiment(i12);
 		addOrGetAbstractExperiment(i22);
